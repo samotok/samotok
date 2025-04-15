@@ -31,3 +31,32 @@ $(document).ready(function () {
         });
     });
 });
+
+
+document.getElementById("main-symptom").addEventListener("change", function () {
+    const selected = this.value;
+    document.querySelectorAll(".symptom-block").forEach(el => el.classList.add("d-none"));
+
+    switch (selected) {
+        case "hearing":
+            document.getElementById("otology-symptoms").classList.remove("d-none");
+            break;
+        case "throat":
+            document.getElementById("rhinology-symptoms").classList.remove("d-none");
+            break;
+        case "nose":
+            document.getElementById("laryngology-symptoms").classList.remove("d-none");
+            break;
+        case "dizziness":
+            document.getElementById("paediatric-symptoms").classList.remove("d-none");
+            break;
+        case "sleep":
+            document.getElementById("neck-head-symptoms").classList.remove("d-none");
+            break;
+        case "allergy":
+            document.getElementById("allergy-symptoms").classList.remove("d-none");
+            break;
+    }
+});
+
+
