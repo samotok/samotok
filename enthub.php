@@ -246,11 +246,13 @@ if ($need_disabled_access) {
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
                             <div class="form-check me-3">
-                                <input class="form-check-input" type="checkbox" id="parking" name="parking" <?= $need_parking ? 'checked' : '' ?> />
+                                <input class="form-check-input" type="checkbox" id="parking" name="parking"
+                                    <?= $need_parking ? 'checked' : '' ?> />
                                 <label class="form-check-label" for="parking">Parking</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="disabled" name="disabled" <?= $need_disabled_access ? 'checked' : '' ?> />
+                                <input class="form-check-input" type="checkbox" id="disabled" name="disabled"
+                                    <?= $need_disabled_access ? 'checked' : '' ?> />
                                 <label class="form-check-label" for="disabled">Disabled Access</label>
                             </div>
                         </div>
@@ -272,7 +274,61 @@ if ($need_disabled_access) {
                                 </div>
                             <?php endforeach; ?>
                         </div>
-                        <!-- repeat symptom blocks similarly ... -->
+
+                        <div id="rhinology-symptoms" class="symptom-block d-none mb-3">
+                            <label class="fw-semibold">Nose Symptoms:</label>
+                            <?php foreach (['nasal_congestion' => 'Nasal Congestion', 'nose_bleeding' => 'Nose Bleeding', 'sinus_pressure' => 'Sinus Pressure'] as $val => $label): ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="symptoms[]" value="<?= $val ?>"
+                                        id="<?= $val ?>" <?= in_array($val, $symptoms) ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="<?= $val ?>"><?= $label ?></label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div id="laryngology-symptoms" class="symptom-block d-none mb-3">
+                            <label class="fw-semibold">Throat Symptoms:</label>
+                            <?php foreach (['sore_throat' => 'Sore Throat', 'hoarseness' => 'Hoarseness', 'swallowing_difficulty' => 'Swallowing Difficulty'] as $val => $label): ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="symptoms[]" value="<?= $val ?>"
+                                        id="<?= $val ?>" <?= in_array($val, $symptoms) ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="<?= $val ?>"><?= $label ?></label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div id="allergy-symptoms" class="symptom-block d-none mb-3">
+                            <label class="fw-semibold">Allergy Symptoms:</label>
+                            <?php foreach (['sneezing' => 'Sneezing', 'itchy_eyes' => 'Itchy Eyes', 'runny_nose' => 'Runny Nose'] as $val => $label): ?>
+                                <div class="form-check">
+                                    <input class="form-checkq-input" type="checkbox" name="symptoms[]" value="<?= $val ?>"
+                                        id="<?= $val ?>" <?= in_array($val, $symptoms) ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="<?= $val ?>"><?= $label ?></label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div id="paediatric-symptoms" class="symptom-block d-none mb-3">
+                            <label class="fw-semibold">Paediatric Symptoms:</label>
+                            <?php foreach (['ear_infection' => 'Ear Infection', 'sore_throat' => 'Sore Throat', 'hoarseness' => 'Hoarseness'] as $val => $label): ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="symptoms[]" value="<?= $val ?>"
+                                        id="<?= $val ?>" <?= in_array($val, $symptoms) ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="<?= $val ?>"><?= $label ?></label> 
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div id="han-surgery-symptoms" class="symptom-block d-none mb-3">
+                            <label class="fw-semibold">Head & Neck Symptoms:</label>
+                            <?php foreach (['lump' => 'Lump', 'pain' => 'Pain', 'swelling' => 'Swelling'] as $val => $label): ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="symptoms[]" value="<?= $val ?>"
+                                        id="<?= $val ?>" <?= in_array($val, $symptoms) ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="<?= $val ?>"><?= $label ?></label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 </form>
             </div>

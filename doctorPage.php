@@ -24,6 +24,8 @@ if ($consultant_id <= 0) {
 $sql = "
 SELECT
     c.id,
+    c.id,
+    c.clinic_id,
     c.name,
     c.consultation_fee,
     sp.speciality AS specialty,
@@ -112,6 +114,22 @@ while ($row = $bkRes->fetch_assoc()) {
     $booked[] = $row['booking_date'];
 }
 $stmt->close();
+
+// Fetch clinic location
+$stmt = $conn->prepare(
+    "SELECT latitude, longitude
+    FROM clinics
+    WHERE id = ?"
+);
+$stmt->bind_param('i', $consultant['clinic_id']);
+$stmt->execute();
+
+$stmt->bind_result($latitude, $longitude);
+
+if (!$stmt->fetch()) {
+    die('Clinic location not found.');
+}
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -130,7 +148,10 @@ $stmt->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Turf.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
@@ -243,6 +264,52 @@ $stmt->close();
                 ],
                 locale: { firstDayOfWeek: 1 }
             });
+        </script>
+
+        <div id="map" style="height: 400px; width: 100%;"></div>
+        <p id="distance">Distance: <span id="dist-value">–</span> km</p>
+
+        <script>
+            const clinic = {
+                lat: <?= json_encode($latitude)?>,
+                lng: <?= json_encode($longitude) ?>
+            };
+
+            const map = L.map('map').setView([clinic.lat, clinic.lng], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+            
+            const clinicMarker = L.marker([clinic.lat, clinic.lng])
+                .addTo(map)
+                .bindPopup('Clinic Location')
+                .openPopup();
+
+            // Get the user's location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    L.marker([userLocation.lat, userLocation.lng])
+                        .addTo(map)
+                        .bindPopup('Your Location')
+                        .openPopup();
+
+                    // Calculate distance
+                    const distance = turf.distance(
+                        turf.point([userLocation.lng, userLocation.lat]),
+                        turf.point([clinic.lng, clinic.lat]),
+                        { units: 'kilometers' }
+                    );
+                    document.getElementById('dist-value').textContent = distance.toFixed(2);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
         </script>
 
         <!-- Book Appointment Button -->
