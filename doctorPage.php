@@ -148,6 +148,8 @@ $stmt->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- Turf.js -->
@@ -208,12 +210,15 @@ $stmt->close();
             cursor: not-allowed;
         }
     </style>
+
+    </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="enthub.php">ENT Care Hub</a>
+
         </div>
     </nav>
 
@@ -223,7 +228,9 @@ $stmt->close();
             <img src="assets/doctor-placeholder.jpg" alt="Doctor" class="rounded-circle mb-3" width="120" height="120">
             <h1><?= htmlspecialchars($consultant['name']) ?></h1>
             <p class="mb-1"><strong>Specialty:</strong> <?= htmlspecialchars($consultant['specialty']) ?></p>
-            <p class="mb-1"><strong>Clinic:</strong> <?= htmlspecialchars($consultant['clinic_name']) ?></p>
+            <a class="mb-1" href="clinicPage.php?id=<?= urlencode($consultant['clinic_id']) ?>">
+                <strong>Clinic:</strong> <?= htmlspecialchars($consultant['clinic_name']) ?>
+            </a>
             <p class="mb-0">Rating: <?= $consultant['avg_rating'] ?? 'No reviews' ?> / 5</p>
             <p class="mb-0">Consultation Fee: £<?= htmlspecialchars($consultant['consultation_fee']) ?></p>
         </div>
@@ -271,7 +278,7 @@ $stmt->close();
 
         <script>
             const clinic = {
-                lat: <?= json_encode($latitude)?>,
+                lat: <?= json_encode($latitude) ?>,
                 lng: <?= json_encode($longitude) ?>
             };
 
@@ -281,7 +288,10 @@ $stmt->close();
                 maxZoom: 19,
                 attribution: '© OpenStreetMap'
             }).addTo(map);
-            
+
+
+
+
             const clinicMarker = L.marker([clinic.lat, clinic.lng])
                 .addTo(map)
                 .bindPopup('Clinic Location')
@@ -294,7 +304,17 @@ $stmt->close();
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
                     };
-                    L.marker([userLocation.lat, userLocation.lng])
+                    const userIcon = L.icon({
+                        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x-blue.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                        shadowSize: [41, 41]
+                    });
+
+
+                    const userMarker = L.marker([userLocation.lat, userLocation.lng], { icon: userIcon })
                         .addTo(map)
                         .bindPopup('Your Location')
                         .openPopup();

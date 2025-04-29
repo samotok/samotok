@@ -95,6 +95,14 @@ if ($questionnaire_specialty) {
 if ($weekday !== null) {
     $where[] = "b.consultant_id IS NULL";
 }
+
+if ($need_parking) {
+    $where[] = "cl.car_parking = 1";
+}
+if ($need_disabled_access) {
+    $where[] = "cl.disabled_access = 1";
+}
+
 if (count($where) > 0) {
     $sql .= ' WHERE ' . implode(' AND ', $where);
 }
@@ -109,12 +117,7 @@ while ($row = $result->fetch_assoc()) {
     $consultants[] = $row;
 }
 
-if ($need_parking) {
-    $where[] = "cl.car_parking = 1";
-}
-if ($need_disabled_access) {
-    $where[] = "cl.disabled_access = 1";
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -205,6 +208,26 @@ if ($need_disabled_access) {
             padding: 1rem;
             background: #fff;
         }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        .card.dark-mode,
+        .consultant-card.dark-mode {
+            background-color: #1e1e1e;
+            border-color: #333;
+        }
+
+        .btn-primary.dark-mode {
+            background-color: #2a9d8f;
+            border-color: #2a9d8f;
+        }
+
+        .text-muted.dark-mode {
+            color: #b0b0b0 !important;
+        }
     </style>
 </head>
 
@@ -213,6 +236,7 @@ if ($need_disabled_access) {
         <div class="container">
             <a class="navbar-brand" href="enthub.php">ENT Care Hub</a>
         </div>
+        <button id="dark-mode-toggle" class="btn btn-secondary">Dark Mode</button>
     </nav>
 
     <div class="container mt-4">
@@ -314,7 +338,7 @@ if ($need_disabled_access) {
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="symptoms[]" value="<?= $val ?>"
                                         id="<?= $val ?>" <?= in_array($val, $symptoms) ? 'checked' : '' ?>>
-                                    <label class="form-check-label" for="<?= $val ?>"><?= $label ?></label> 
+                                    <label class="form-check-label" for="<?= $val ?>"><?= $label ?></label>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -365,7 +389,7 @@ if ($need_disabled_access) {
                             <?php if ($filter_date): ?>
                                 <p class="text-success mb-3">Available <?= htmlspecialchars($filter_date) ?></p>
                             <?php endif; ?>
-                            <a href="doctorPage.php?id=<?= urlencode($c['id']) ?>" class="btn btn-primary mt-auto">View
+                            <a href="doctorPage.php?id=<?= urlencode(string: $c['id']) ?>" class="btn btn-primary mt-auto">View
                                 Profile</a>
                         </div>
                     </div>
@@ -431,6 +455,18 @@ if ($need_disabled_access) {
             const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
             return R * 2 * Math.asin(Math.sqrt(a));
         }
+
+        $(document).ready(function () {
+            // Dark mode toggle
+            $('#dark-mode-toggle').click(function () {
+                $('body').toggleClass('dark-mode');
+                $('.card').toggleClass('dark-mode');
+                $('.consultant-card').toggleClass('dark-mode');
+                $('.btn-primary').toggleClass('dark-mode');
+                $('.text-muted').toggleClass('dark-mode');
+            });
+        });
+
     </script>
 </body>
 
