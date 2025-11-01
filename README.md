@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @samotok
 - 👀 I’m interested in Web Development, Blockchain, Business Intelligence
-- 🌱 I’m currently studying Computer Science in school, creating a web-based Order Management System
+- 🌱 I’m currently studying Computer Science at Loughborough University
 - 💞️ I’m looking to collaborate on anything that will give me experience!
 
 <!---
